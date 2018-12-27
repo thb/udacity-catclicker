@@ -12,12 +12,12 @@ div {
 }
 
 .cat__list {
-  width: 33.33%;
+  width: 10%;
   background: #eee;
 }
 
 .cat__details {
-  width: 33.33%;
+  width: 40%;
 }
 
 .cat__details img {
