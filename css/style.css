@@ -1,19 +1,25 @@
 html,
-body {
+body,
+div {
   margin: 0;
   padding: 0;
   font-family: Arial;
 }
 
-.cat-list {
+.main {
   display: flex;
   flex-wrap: wrap;
 }
 
-.cat {
+.cat__list {
+  width: 33.33%;
+  background: #eee;
+}
+
+.cat__details {
   width: 33.33%;
 }
 
-.cat img {
+.cat__details img {
   width: 100%;
 }

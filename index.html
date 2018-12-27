@@ -17,12 +17,19 @@
   </head>
   <body>
     <h1>Cat Clicker</h1>
-    <div class="main"><div class="cat-list"></div></div>
+    <div class="main">
+      <ul class="cat__list"></ul>
+      <div class="cat__details"></div>
+    </div>
 
-    <script id="cat-template" type="text/x-handlebars-template">
+    <script id="cat-list-item-template" type="text/x-handlebars-template">
+      <li class="cat__item">{{name}}</li>
+    </script>
+
+    <script id="cat-details-template" type="text/x-handlebars-template">
       <div class="cat">
         <h1>{{name}}</h1>
-        <span class="clicks">0</span>
+        <span class="clicks">{{clickCount}}</span>
         <img src="{{img}}"/>
       </div>
     </script>
