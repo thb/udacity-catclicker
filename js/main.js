@@ -1,11 +1,4 @@
 (function() {
-  function htmlToElement(html) {
-    const template = document.createElement("template");
-    html = html.trim(); // Never return a text node of whitespace as the result
-    template.innerHTML = html;
-    return template.content.firstChild;
-  }
-
   function siblingPosition(child) {
     let index = 0;
     while ((child = child.previousSibling) != null) index++;
@@ -51,7 +44,7 @@
       return this.catList[this.currentCat];
     },
 
-    clickCurrentCat() {
+    incrementCounter() {
       this.catList[this.currentCat].clickCount++;
     }
   };
@@ -67,40 +60,54 @@
 
     selectCat(id) {
       model.setCurrentCat(id);
-      view.renderCurrentCat();
+      catDetailsView.render();
     },
 
     clickCat() {
-      model.clickCurrentCat();
-      view.renderCurrentCat();
+      model.incrementCounter();
+      catDetailsView.render();
     },
 
     init() {
       model.init();
-      view.init();
+      catDetailsView.init();
+      catListView.init();
     }
   };
 
-  const view = {
+  const catDetailsView = {
     init() {
-      this.catListItemTemplate = Handlebars.compile(
-        document.getElementById("cat-list-item-template").innerHTML
-      );
-      this.catDetailsTemplate = Handlebars.compile(
-        document.getElementById("cat-details-template").innerHTML
-      );
-      this.catListEl = document.querySelector(".cat__list");
       this.catDetailsEl = document.querySelector(".cat__details");
-      this.renderList();
-      this.renderCurrentCat();
-      this.catListEl.addEventListener("click", this.respondToSelectCat);
+      this.render();
       this.catDetailsEl.addEventListener("click", this.respondToClickCat);
     },
 
-    renderList() {
+    render() {
+      const cat = octopus.getCurrentCat();
+      this.catDetailsEl.querySelector("h1").innerText = cat.name;
+      this.catDetailsEl.querySelector(".clicks").innerText = cat.clickCount;
+      this.catDetailsEl.querySelector("img").src = cat.img;
+    },
+
+    respondToClickCat() {
+      if (event.target.nodeName == "IMG") {
+        octopus.clickCat();
+      }
+    }
+  };
+
+  const catListView = {
+    init() {
+      this.catListEl = document.querySelector(".cat__list");
+      this.render();
+      this.catListEl.addEventListener("click", this.respondToSelectCat);
+    },
+
+    render() {
       octopus.getCats().forEach(cat => {
-        const catEl = htmlToElement(this.catListItemTemplate(cat));
-        this.catListEl.appendChild(catEl);
+        const itemEl = document.createElement("li");
+        itemEl.innerText = cat.name;
+        this.catListEl.appendChild(itemEl);
       });
     },
 
@@ -108,22 +115,6 @@
       if (event.target.nodeName == "LI") {
         const catItemEl = event.target;
         octopus.selectCat(siblingPosition(catItemEl));
-      }
-    },
-
-    renderCurrentCat() {
-      const cat = octopus.getCurrentCat();
-      const catDetailsEl = htmlToElement(this.catDetailsTemplate(cat));
-      if (this.catDetailsEl.firstChild) {
-        this.catDetailsEl.firstChild.remove();
-      }
-      this.catDetailsEl.appendChild(catDetailsEl);
-    },
-
-    respondToClickCat() {
-      if (event.target.nodeName == "IMG") {
-        console.log("click");
-        octopus.clickCat();
       }
     }
   };
